@@ -9,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity // 스프링 시큐리티 필터가 스프링 필터체인에 등록
-public class SecuriyConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean //해당 메서드의 리턴되는 오브젝트를 IoC로 등록
     public BCryptPasswordEncoder encodePwd(){
@@ -26,13 +26,15 @@ public class SecuriyConfig extends WebSecurityConfigurerAdapter {
                 .frameOptions()
                 .disable();
         http.authorizeRequests()
-                .antMatchers("/user/**").authenticated()
+                .antMatchers("/user/**").authenticated() //인증만 되면 들어갈 수 있는 주소
                 .antMatchers("/manager/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
                 .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll()
 
                 .and()
                 .formLogin()
-                .loginPage("/loginForm");
+                .loginPage("/loginForm")
+                .loginProcessingUrl("/login") //  /login 주소가 호출이 되면 시큐리티가 낚아채서 로그인 처리
+                .defaultSuccessUrl("/");
     }
 }
