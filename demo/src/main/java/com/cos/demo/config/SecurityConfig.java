@@ -1,5 +1,7 @@
 package com.cos.demo.config;
 
+import com.cos.demo.config.oauth.PrincipleOauth2UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -12,6 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity // 스프링 시큐리티 필터가 스프링 필터체인에 등록
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)  //secured 어노테이션 활성화, preAuthorize 활성ㅎ
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private PrincipleOauth2UserService principleOauth2UserService;
 
     @Bean //해당 메서드의 리턴되는 오브젝트를 IoC로 등록
     public BCryptPasswordEncoder encodePwd(){
@@ -40,6 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/")
                 .and()
                 .oauth2Login()
-                .loginPage("/loginForm"); // 후처리 필요
+                .loginPage("/loginForm")
+                .userInfoEndpoint()
+                .userService(principleOauth2UserService);
     }
 }

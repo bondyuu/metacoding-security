@@ -3,9 +3,11 @@ package com.cos.demo.auth;
 import com.cos.demo.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 
 //시큐리티가 /login을 낚아채서 로그인을 진행하는데
@@ -13,7 +15,7 @@ import java.util.Collection;
 //오브젝트가 정해져있음 -> Authentication 타입 객체
 //User 정보 -> UserDetails타입
 //Security Session -> Authentication -> UserDetails(PrincipleDetails)
-public class PrincipleDetails implements UserDetails {
+public class PrincipleDetails implements UserDetails, OAuth2User {
 
     private User user; //콤포지션
 
@@ -21,6 +23,11 @@ public class PrincipleDetails implements UserDetails {
         this.user = user;
     }
 
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return null;
+    }
 
     //해당 유저의 권한 리턴
     @Override
@@ -65,5 +72,10 @@ public class PrincipleDetails implements UserDetails {
     public boolean isEnabled() {
         //휴면 계정 처리
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 }
